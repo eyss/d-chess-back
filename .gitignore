@@ -2,3 +2,5 @@ dist/
 node_modules/
 target/
 .hc
+.cargo
+zomes/game/code/Cargo.lock
