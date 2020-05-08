@@ -84,6 +84,7 @@ impl Game<ChessMove> for ChessGame {
         }
     }
     fn is_valid(self, _game_move: ChessMove) -> Result<(), String> {
+        // TODO: Validate movement
         Ok(())
     }
     fn apply_move(
@@ -110,6 +111,7 @@ impl Game<ChessMove> for ChessGame {
       _moves_with_author: &Vec<(Address, ChessMove)>,
       _players: &Vec<Address>,
     ) -> Option<Address> {
+        // TODO: get winner
         None
     }
 }
@@ -134,6 +136,17 @@ mod scores {
     }
     #[zome_fn("hc_public")]
     fn invite_user(_addr: Address) -> ZomeApiResult<bool> {
+        // TODO: invite user
+        Ok(true)
+    }
+    // TODO: check my games
+    // TODO: check my received invitations
+    // TODO: accept invitation
+    // TODO: check my sent unapproved invitations
+    // TODO: move piece
+    #[zome_fn("hc_public")]
+    fn move_piece(_game_addr: Address, _movement: ChessMove) -> ZomeApiResult<bool> {
+        // TODO: make a move
         Ok(true)
     }
 }
