@@ -7,10 +7,10 @@ use hdk_proc_macros::zome;
 use hdk::AGENT_ADDRESS;
 
 extern crate serde;
-#[macro_use]
+// #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
-#[macro_use]
+// #[macro_use]
 extern crate holochain_json_derive;
 extern crate holochain_turn_based_game;
 extern crate rand;
@@ -69,6 +69,10 @@ mod scores {
     #[entry_def]
     fn invitation_def() -> ValidatingEntryType {
         invitation::entry_def()
+    }
+    #[entry_def]
+    fn match_data_def() -> ValidatingEntryType {
+        chess::match_data_def()
     }
     #[zome_fn("hc_public")]
     fn create_profile(username: String) -> ZomeApiResult<Address> {
@@ -139,25 +143,53 @@ mod scores {
         )?;
         Ok(res)
     }
-    // TODO: accept invitation
     #[zome_fn("hc_public")]
     fn reject_invitation(invitation_address: Address) -> ZomeApiResult<bool> {
-        let mut invitation = hdk::utils::get_as_type::<Invitation>(invitation_address)?;
+        let mut invitation = hdk::utils::get_as_type::<Invitation>(invitation_address.clone())?;
         invitation.status = String::from("rejected");
+        let entry = invitation.entry();
+        let _ = hdk::api::update_entry(entry, &invitation_address);
         Ok(true)
     }
-    // TODO: accept invitation
     #[zome_fn("hc_public")]
-    fn accept_invitation( _invitation_address: Address, _timestamp: u32) -> ZomeApiResult<bool> {
+    fn accept_invitation( invitation_address: Address, timestamp: u32) -> ZomeApiResult<bool> {
+        let mut invitation = hdk::utils::get_as_type::<Invitation>(invitation_address.clone())?;
+        invitation.status = String::from("accepted");
+        let entry = invitation.clone().entry();
+        let _ = hdk::api::update_entry(entry, &invitation_address);
+        let _ = create_game(invitation.inviter, timestamp);
         Ok(true)
     }
-    // TODO: check my games
-    // TODO: check my received invitations
-    // TODO: check my sent unapproved invitations
-    // TODO: move piece
+    // This must be coupled asynchronically with the get_entry function
+    // to load the game data in an asynchronic manner.
+    // In order to get the rival username, use the get_username function
     #[zome_fn("hc_public")]
-    fn move_piece(_game_addr: Address, _movement: ChessMove) -> ZomeApiResult<bool> {
-        // TODO: make a move
-        Ok(true)
+    fn check_my_games() -> ZomeApiResult<Vec<MatchData>> {
+        let res = hdk::utils::get_links_and_load_type(
+            &AGENT_ADDRESS,
+            LinkMatch::Exactly("agent->match_data"),
+            LinkMatch::Any,
+        )?;
+        Ok(res)
+    }
+    #[zome_fn("hc_public")]
+    fn get_entry(game_address: Address) -> ZomeApiResult<Option<Entry>> {
+        hdk::get_entry(&game_address)
+    }
+    #[zome_fn("hc_public")]
+    fn place_piece(game_address: Address, origin_number: u8, origin_letter: u8, destination_number: u8, destination_letter: u8) -> ZomeApiResult<Address> {
+        let new_move = Move {
+            origin_number,
+            origin_letter,
+            destination_number,
+            destination_letter,
+        };
+        let game_move = ChessMove::Place(new_move);
+        holochain_turn_based_game::create_move(&game_address, game_move)
+    }
+    #[zome_fn("hc_public")]
+    fn surrender(game_address: Address) -> ZomeApiResult<Address> {
+        let game_move = ChessMove::Resign;
+        holochain_turn_based_game::create_move(&game_address, game_move)
     }
 }
