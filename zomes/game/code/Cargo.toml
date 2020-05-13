@@ -13,7 +13,7 @@ hdk_proc_macros = "=0.0.47-alpha1"
 holochain_wasm_utils = "=0.0.47-alpha1"
 holochain_json_derive = "0.0"
 # holochain_roles = "0.1"
-holochain_turn_based_game = "0.1.0"
+holochain_turn_based_game = "0.1.1"
 rand = "0.7.3"
 [lib]
 path = "src/lib.rs"
