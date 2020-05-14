@@ -45,7 +45,7 @@ pub fn match_data_def () -> ValidatingEntryType {
         validation_package: || {
             hdk::ValidationPackageDefinition::Entry
         },
-        validation: |_validation_data: hdk::EntryValidationData<Address>| {
+        validation: |_validation_data: hdk::EntryValidationData<MatchData>| {
             Ok(())
         },
         links: [

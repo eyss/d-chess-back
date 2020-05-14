@@ -33,7 +33,7 @@ pub fn entry_def() -> ValidatingEntryType {
         validation_package: || {
             hdk::ValidationPackageDefinition::Entry
         },
-        validation: |_validation_data: hdk::EntryValidationData<Address>| {
+        validation: |_validation_data: hdk::EntryValidationData<Invitation>| {
             Ok(())
         },
         links: [

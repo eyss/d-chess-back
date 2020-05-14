@@ -79,14 +79,14 @@ mod scores {
         let user = User::from(username);
         let profile_entry = user.entry();
         let profile_address = hdk::commit_entry(&profile_entry)?;
-        hdk::link_entries(&AGENT_ADDRESS, &profile_address, "agent->profile", "")?;
-        Ok(AGENT_ADDRESS.clone())
+        hdk::link_entries(&AGENT_ADDRESS, &profile_address, "agent->user", "")?;
+        return Ok(AGENT_ADDRESS.clone());
     }
     #[zome_fn("hc_public")]
     fn get_username(addr: Address) -> ZomeApiResult<String> {
         let wrapped_profile_array: Vec<User> = hdk::utils::get_links_and_load_type(
             &addr,
-            LinkMatch::Exactly("agent->profile"),
+            LinkMatch::Exactly("agent->user"),
             LinkMatch::Any,
         )?;
         let wrapped_profile = wrapped_profile_array.last();
@@ -100,7 +100,7 @@ mod scores {
         //fetch profile linked from the agent address
         let mut res = hdk::utils::get_links_and_load_type::<User>(
             &AGENT_ADDRESS,
-            LinkMatch::Exactly("agent->profile"),
+            LinkMatch::Exactly("agent->user"),
             LinkMatch::Any,
         )?;
 

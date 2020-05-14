@@ -1,0 +1,53 @@
+bridges = []
+persistence_dir = ''
+ui_bundles = []
+ui_interfaces = []
+
+[[agents]]
+id = 'hc-run-agent'
+keystore_file = 'agent1.key'
+name = 'testAgent'
+public_address = 'HcSCJOuCJ3PzuiobbxdISxt64mUFpgzhghCfxxmnNcjv4i9hcwGz6S7Wxm8jpta'
+
+[[dnas]]
+file = 'dist/crypto-chess.dna.json'
+hash = 'QmZhjqWEnospTkfBTJVkDAKFAHb4FLQmKpWXtUitJ7o7W9'
+id = 'hc-run-dna'
+
+[[instances]]
+agent = 'hc-run-agent'
+dna = 'hc-run-dna'
+
+id = '__H_Wiki'
+
+[instances.storage]
+type = 'memory'
+
+[[interfaces]]
+admin = true
+id = 'websocket-interface'
+
+[[interfaces.instances]]
+id = '__H_Wiki'
+
+[interfaces.driver]
+port = 3400
+type = 'websocket'
+
+[logger]
+state_dump = false
+type = 'debug'
+
+[logger.rules]
+rules = []
+
+[passphrase_service]
+type = 'cmd'
+
+[signals]
+consistency = false
+trace = false
+
+[network]
+type = 'sim2h'
+sim2h_url = 'ws://localhost:9000'

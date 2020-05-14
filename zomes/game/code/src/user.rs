@@ -24,8 +24,8 @@ impl User{
 }
 
 impl From<String> for User {
-    fn from(name: String) -> Self {
-        User { username: name }
+    fn from(username: String) -> Self {
+        User { username }
     }
 }
 
@@ -37,13 +37,13 @@ pub fn entry_def() -> ValidatingEntryType {
         validation_package: || {
             hdk::ValidationPackageDefinition::Entry
         },
-        validation: |_validation_data: hdk::EntryValidationData<Address>| {
+        validation: |_validation_data: hdk::EntryValidationData<User>| {
             Ok(())
         },
         links: [
             from!(
                 "%agent_id",
-                link_type: "agent->profile",
+                link_type: "agent->user",
                 validation_package: || {
                     hdk::ValidationPackageDefinition::Entry
                 },
