@@ -2,6 +2,7 @@
 
 extern crate hdk;
 extern crate hdk_proc_macros;
+extern crate holochain_core_types;
 use hdk::prelude::*;
 use hdk_proc_macros::zome;
 use hdk::AGENT_ADDRESS;
@@ -75,12 +76,16 @@ mod scores {
         chess::match_data_def()
     }
     #[zome_fn("hc_public")]
+    fn get_my_public_address() -> ZomeApiResult<Address> {
+        Ok(AGENT_ADDRESS.clone())
+    }
+    #[zome_fn("hc_public")]
     fn create_profile(username: String) -> ZomeApiResult<Address> {
         let user = User::from(username);
         let profile_entry = user.entry();
         let profile_address = hdk::commit_entry(&profile_entry)?;
         hdk::link_entries(&AGENT_ADDRESS, &profile_address, "agent->user", "")?;
-        return Ok(AGENT_ADDRESS.clone());
+        Ok(AGENT_ADDRESS.clone())
     }
     #[zome_fn("hc_public")]
     fn get_username(addr: Address) -> ZomeApiResult<String> {
@@ -110,9 +115,52 @@ mod scores {
             }),
             None => Err(ZomeApiError::Internal("No profile registered".to_string())),
         }
-    }
+    }/*
     #[zome_fn("hc_public")]
-    fn invite_user(rival: Address) -> ZomeApiResult<bool> {
+    fn invite_user(username: String) -> ZomeApiResult<bool> {
+        let user = User::from(username);
+        let user_entry = user.entry();
+        let rival = hdk::entry_address(&user_entry)?;
+
+        let invitation = Invitation {
+            invited: rival.clone(),
+            inviter: AGENT_ADDRESS.clone(),
+            status: String::from("Pending")
+        };
+        let entry = invitation.entry();
+        let invitation_address = hdk::commit_entry(&entry)?;
+        // TODO: link
+        hdk::link_entries(&AGENT_ADDRESS, &invitation_address, "inviter", "")?;
+        hdk::link_entries(&rival, &invitation_address, "invited", "")?;
+        Ok(true)
+    }*/
+    #[zome_fn("hc_public")]
+    fn invite_user(username: String) -> ZomeApiResult<bool> {
+        let user = User::from(username);
+        let user_entry = user.entry();
+        let user_entry_address = hdk::entry_address(&user_entry)?;
+        let status_request = StatusRequestKind::Latest;
+        let options = GetEntryOptions::new(
+            status_request,
+            false,
+            true,
+            holochain_core_types::time::Timeout::new(std::usize::MAX)
+        );
+        let metadata: GetEntryResultType = (hdk::api::get_entry_result(&user_entry_address,options)?).result;
+
+        let rival: Address;
+        match metadata{
+            GetEntryResultType::Single(data) => {
+                if data.headers.len() == 0 {
+                    return Err(ZomeApiError::Internal("User not found".to_string()))
+                }
+                let provenance = &data.headers[0].provenances()[0];
+                rival = provenance.0.clone();
+            },
+            GetEntryResultType::All(_) => {
+                return Err(ZomeApiError::Internal("How did this even happen".to_string()))
+            }
+        }
         let invitation = Invitation {
             invited: rival.clone(),
             inviter: AGENT_ADDRESS.clone(),

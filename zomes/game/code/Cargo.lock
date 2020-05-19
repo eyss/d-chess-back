@@ -355,6 +355,7 @@ version = "0.1.0"
 dependencies = [
  "hdk 0.0.47-alpha1 (registry+https://github.com/rust-lang/crates.io-index)",
  "hdk_proc_macros 0.0.47-alpha1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "holochain_core_types 0.0.47-alpha1 (registry+https://github.com/rust-lang/crates.io-index)",
  "holochain_json_derive 0.0.30 (registry+https://github.com/rust-lang/crates.io-index)",
  "holochain_turn_based_game 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "holochain_wasm_utils 0.0.47-alpha1 (registry+https://github.com/rust-lang/crates.io-index)",
