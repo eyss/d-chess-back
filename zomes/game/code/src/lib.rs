@@ -115,25 +115,7 @@ mod scores {
             }),
             None => Err(ZomeApiError::Internal("No profile registered".to_string())),
         }
-    }/*
-    #[zome_fn("hc_public")]
-    fn invite_user(username: String) -> ZomeApiResult<bool> {
-        let user = User::from(username);
-        let user_entry = user.entry();
-        let rival = hdk::entry_address(&user_entry)?;
-
-        let invitation = Invitation {
-            invited: rival.clone(),
-            inviter: AGENT_ADDRESS.clone(),
-            status: String::from("Pending")
-        };
-        let entry = invitation.entry();
-        let invitation_address = hdk::commit_entry(&entry)?;
-        // TODO: link
-        hdk::link_entries(&AGENT_ADDRESS, &invitation_address, "inviter", "")?;
-        hdk::link_entries(&rival, &invitation_address, "invited", "")?;
-        Ok(true)
-    }*/
+    }
     #[zome_fn("hc_public")]
     fn invite_user(username: String, timestamp: u64) -> ZomeApiResult<bool> {
         let user = User::from(username);
