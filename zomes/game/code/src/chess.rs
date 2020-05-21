@@ -122,15 +122,15 @@ impl Game<ChessMove> for ChessGame {
     }
 }
 
-pub fn create_game( rival: Address, timestamp: u32) -> ZomeApiResult<()>{
+pub fn create_game( rival: Address, timestamp: u64) -> ZomeApiResult<()>{
     let game = GameEntry {
         players: vec![rival.clone(), hdk::AGENT_ADDRESS.clone()],
         created_at: timestamp,
     };
 
-    let match_address = holochain_turn_based_game::create_game(game);
+    let match_address = holochain_turn_based_game::create_game(game)?;
     let match_data = MatchData {
-        match_address: match_address.unwrap(),
+        match_address,
     };
 
     let entry = match_data.entry();

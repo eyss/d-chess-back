@@ -135,7 +135,7 @@ mod scores {
         Ok(true)
     }*/
     #[zome_fn("hc_public")]
-    fn invite_user(username: String) -> ZomeApiResult<bool> {
+    fn invite_user(username: String, timestamp: u64) -> ZomeApiResult<bool> {
         let user = User::from(username);
         let user_entry = user.entry();
         let user_entry_address = hdk::entry_address(&user_entry)?;
@@ -164,7 +164,8 @@ mod scores {
         let invitation = Invitation {
             invited: rival.clone(),
             inviter: AGENT_ADDRESS.clone(),
-            status: String::from("Pending")
+            status: String::from("Pending"),
+            timestamp,
         };
         let entry = invitation.entry();
         let invitation_address = hdk::commit_entry(&entry)?;
@@ -192,7 +193,15 @@ mod scores {
         Ok(res)
     }
     #[zome_fn("hc_public")]
-    fn reject_invitation(invitation_address: Address) -> ZomeApiResult<bool> {
+    fn reject_invitation(inviter: Address, invited: Address, invitation_timestamp: u64) -> ZomeApiResult<bool> {
+        let invitation = Invitation{
+            inviter,
+            invited,
+            status: "Pending".to_string(),
+            timestamp: invitation_timestamp
+        };
+        let invitation_entry = invitation.entry();
+        let invitation_address = hdk::entry_address(&invitation_entry)?;
         let mut invitation = hdk::utils::get_as_type::<Invitation>(invitation_address.clone())?;
         invitation.status = String::from("rejected");
         let entry = invitation.entry();
@@ -200,7 +209,15 @@ mod scores {
         Ok(true)
     }
     #[zome_fn("hc_public")]
-    fn accept_invitation( invitation_address: Address, timestamp: u32) -> ZomeApiResult<bool> {
+    fn accept_invitation(inviter: Address, invited: Address, invitation_timestamp: u64, timestamp: u64) -> ZomeApiResult<bool> {
+        let invitation = Invitation{
+            inviter,
+            invited,
+            status: "Pending".to_string(),
+            timestamp: invitation_timestamp
+        };
+        let invitation_entry = invitation.entry();
+        let invitation_address = hdk::entry_address(&invitation_entry)?;
         let mut invitation = hdk::utils::get_as_type::<Invitation>(invitation_address.clone())?;
         invitation.status = String::from("accepted");
         let entry = invitation.clone().entry();

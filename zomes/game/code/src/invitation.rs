@@ -16,7 +16,8 @@ use hdk::holochain_json_api::{
 pub struct Invitation {
     pub inviter: Address,
     pub invited: Address,
-    pub status: String
+    pub status: String,
+    pub timestamp: u64,
 }
 
 impl Invitation{
