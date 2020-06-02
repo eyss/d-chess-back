@@ -204,7 +204,7 @@ mod scores {
         invitation.status = String::from("accepted");
         let entry = invitation.clone().entry();
         let _ = hdk::api::update_entry(entry, &invitation_address);
-        let _ = create_game(invitation.inviter, timestamp);
+        let _ = create_game(invitation.inviter, timestamp)?;
         Ok(true)
     }
     // This must be coupled asynchronically with the get_entry function

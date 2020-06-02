@@ -9,15 +9,21 @@ keystore_file = 'agent1.key'
 name = 'testAgent'
 public_address = 'HcSCJOuCJ3PzuiobbxdISxt64mUFpgzhghCfxxmnNcjv4i9hcwGz6S7Wxm8jpta'
 
+[[agents]]
+id = 'hc-run-agent2'
+keystore_file = 'agent2.key'
+name = 'testAgent2'
+public_address = 'HcScjZRDOMBi7fou3idupKD56e87xDk8oc6t73W5DStPk7ic6Boo4p896fm5cua'
+
 [[dnas]]
 file = 'dist/crypto-chess.dna.json'
-hash = 'QmbKgn1Gon8L3nvNkRYx85mTAo3VHPkD1f5M4AgmhfZifU'
+hash = 'QmYL6Y18rVcQAtsJ4D16LazdCN6mEeAfvqvQPb3C5Ufdqa'
 id = 'hc-run-dna'
 
+#########################################
 [[instances]]
 agent = 'hc-run-agent'
 dna = 'hc-run-dna'
-
 id = '__H_Wiki'
 
 [instances.storage]
@@ -33,6 +39,27 @@ id = '__H_Wiki'
 [interfaces.driver]
 port = 3400
 type = 'websocket'
+###########################################
+[[instances]]
+agent = 'hc-run-agent2'
+dna = 'hc-run-dna'
+id = '__H_Wiki2'
+
+[instances.storage]
+type = 'memory'
+
+[[interfaces]]
+admin = true
+id = 'websocket-interface2'
+
+[[interfaces.instances]]
+id = '__H_Wiki2'
+
+[interfaces.driver]
+port = 3401
+type = 'websocket'
+###############################################
+
 
 [logger]
 state_dump = false
