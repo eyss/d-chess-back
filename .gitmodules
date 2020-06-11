@@ -1,0 +1,3 @@
+[submodule "zomes/profiles"]
+	path = zomes/profiles
+	url = https://github.com/holochain-open-dev/profiles-zome
