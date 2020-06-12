@@ -11,7 +11,7 @@ public_address = 'HcScjZRDOMBi7fou3idupKD56e87xDk8oc6t73W5DStPk7ic6Boo4p896fm5cu
 
 [[dnas]]
 file = '../../dist/d-chess-back.dna.json'
-hash = 'QmRukLEZpT9ujSDTzPemRxnEVsHhVY2L2i5o1SMVtK5Mn4'
+hash = 'QmbCHrcxTYTMUHrxT9knkFQPXLiv9nnYdStMqGAqLPpaoS'
 id = 'hc-run-dna'
 
 [[instances]]

@@ -1,5 +1,5 @@
 use hdk::prelude::*;
-use holochain_turn_based_game::game::Game as TurnBasedGame;
+use holochain_turn_based_game::game::TurnBasedGame;
 use holochain_turn_based_game::game::GameEntry;
 
 use hdk::holochain_persistence_api::cas::content::Address;
@@ -85,7 +85,6 @@ impl TurnBasedGame<ChessGameMove> for ChessGame {
     // Gets the winner for the game
     fn get_winner(
         &self,
-        _moves_with_author: &Vec<(Address, ChessGameMove)>,
         players: &Vec<Address>,
     ) -> Option<Address> {
         match self.game.result() {

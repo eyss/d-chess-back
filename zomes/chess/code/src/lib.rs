@@ -183,4 +183,11 @@ mod scores {
         let game_move = ChessGameMove::Resign;
         holochain_turn_based_game::create_move(&game_address, game_move)
     }
+
+    #[receive]
+    fn receive(sender_address: Address, message: String) -> String {
+        let result = holochain_turn_based_game::handle_receive_move(sender_address, message);
+
+        JsonString::from(result).to_string()
+    }
 }
